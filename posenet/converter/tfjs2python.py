@@ -15,12 +15,11 @@ BASE_DIR = os.path.join(tempfile.gettempdir(), '_posenet_weights')
 def to_output_strided_layers(convolution_def, output_stride):
     current_stride = 1
     rate = 1
-    block_id = 0
     buff = []
-    for _a in convolution_def:
+    for block_id, _a in enumerate(convolution_def):
         conv_type = _a[0]
         stride = _a[1]
-        
+
         if current_stride == output_stride:
             layer_stride = 1
             layer_rate = rate
@@ -29,7 +28,7 @@ def to_output_strided_layers(convolution_def, output_stride):
             layer_stride = stride
             layer_rate = 1
             current_stride *= stride
-        
+
         buff.append({
             'blockId': block_id,
             'convType': conv_type,
@@ -37,8 +36,6 @@ def to_output_strided_layers(convolution_def, output_stride):
             'rate': layer_rate,
             'outputStride': current_stride
         })
-        block_id += 1
-
     return buff
 
 
